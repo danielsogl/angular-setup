@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "tsc && npm run copy-files",
-    "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-setup/schema.json dist/ng-setup/schema.json && cp src/migrations.json dist/migrations.json",
+    "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-add/schema.json dist/ng-add/schema.json && cp src/migrations.json dist/migrations.json",
     "prepublishOnly": "npm run build",
     "test": "npm run build && vitest run",
     "format": "prettier --write .",

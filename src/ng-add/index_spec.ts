@@ -5,7 +5,7 @@ import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../dist/collection.json');
 
-describe('ng-setup', () => {
+describe('ng-add', () => {
   let runner: SchematicTestRunner;
   let tree: UnitTestTree;
 
@@ -35,7 +35,7 @@ describe('ng-setup', () => {
     };
 
     const spy = vi.spyOn(runner.engine, 'createCollection');
-    const resultTree = await runner.runSchematic('ng-setup', options, tree);
+    const resultTree = await runner.runSchematic('ng-add', options, tree);
 
     expect(spy).toHaveBeenCalledWith('@angular-eslint/schematics', expect.anything());
     expect(resultTree).toBeDefined();
@@ -46,7 +46,7 @@ describe('ng-setup', () => {
       project: 'test-app',
     };
 
-    const resultTree = await runner.runSchematic('ng-setup', options, tree);
+    const resultTree = await runner.runSchematic('ng-add', options, tree);
 
     expect(resultTree).toBeDefined();
     expect(resultTree.files.length).toBeGreaterThan(0);

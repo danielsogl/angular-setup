@@ -5,7 +5,7 @@ import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../dist/collection.json');
 
-describe('ng-setup integration', () => {
+describe('ng-add integration', () => {
   let runner: SchematicTestRunner;
   let appTree: UnitTestTree;
 
@@ -37,7 +37,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     expect(tree.files.length).toBeGreaterThan(0);
 
@@ -50,7 +50,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     expect(tree.files.some((file) => file.includes('eslint'))).toBe(true);
   });
@@ -64,7 +64,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     expect(tree).toBeDefined();
     expect(tree.files.length).toBeGreaterThan(0);
@@ -75,7 +75,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     expect(tree.exists('.prettierrc.json')).toBe(true);
 
@@ -92,7 +92,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     expect(tree.exists('.prettierignore')).toBe(true);
 
@@ -108,7 +108,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const packageJson = tree.readJson('package.json') as any;
     expect(packageJson.devDependencies).toBeDefined();
@@ -121,7 +121,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const prettierConfig = tree.readJson('.prettierrc.json') as any;
     expect(prettierConfig.trailingComma).toBe('es5');
@@ -135,7 +135,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     expect(tree.exists('lefthook.yml')).toBe(true);
 
@@ -149,7 +149,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const lefthookConfig = tree.readText('lefthook.yml');
     expect(lefthookConfig).toContain('parallel: true');
@@ -165,7 +165,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const lefthookConfig = tree.readText('lefthook.yml');
     expect(lefthookConfig).toContain('test:');
@@ -179,7 +179,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const packageJson = tree.readJson('package.json') as any;
     expect(packageJson.devDependencies).toBeDefined();
@@ -191,7 +191,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const packageJson = tree.readJson('package.json') as any;
     expect(packageJson.scripts).toBeDefined();
@@ -203,7 +203,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const lefthookConfig = tree.readText('lefthook.yml');
     expect(lefthookConfig).toContain('{staged_files}');
@@ -215,7 +215,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const angularJson = tree.readJson('angular.json') as any;
     const project = angularJson.projects['integration-test-app'];
@@ -230,7 +230,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const packageJson = tree.readJson('package.json') as any;
     expect(packageJson.devDependencies['vitest']).toBeDefined();
@@ -263,7 +263,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const packageJson = tree.readJson('package.json') as any;
     expect(packageJson.devDependencies['karma']).toBeUndefined();
@@ -282,7 +282,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     expect(tree.exists('karma.conf.js')).toBe(false);
   });
@@ -292,7 +292,7 @@ describe('ng-setup integration', () => {
       project: 'integration-test-app',
     };
 
-    const tree = await runner.runSchematic('ng-setup', options, appTree);
+    const tree = await runner.runSchematic('ng-add', options, appTree);
 
     const angularJson = tree.readJson('angular.json') as any;
     const project = angularJson.projects['integration-test-app'];
@@ -302,7 +302,7 @@ describe('ng-setup integration', () => {
   });
 });
 
-describe('ng-setup real project validation', () => {
+describe('ng-add real project validation', () => {
   it('should create real project with all tools and verify they are executable', async () => {
     const { execSync } = await import('child_process');
     const fs = await import('fs');
@@ -332,8 +332,8 @@ describe('ng-setup real project validation', () => {
         timeout: 60000,
       });
 
-      console.log('Running ng-setup schematic...');
-      execSync(`npx ng g @danielsogl/angular-setup:ng-setup --project=${projectName}`, {
+      console.log('Running ng-add schematic...');
+      execSync(`npx ng add @danielsogl/angular-setup --project=${projectName}`, {
         cwd: projectPath,
         stdio: 'pipe',
         timeout: 120000,
@@ -500,15 +500,12 @@ describe('ng-setup real project validation', () => {
         timeout: 60000,
       });
 
-      console.log('Running ng-setup schematic with vitest=false...');
-      execSync(
-        `npx ng g @danielsogl/angular-setup:ng-setup --project=${projectName} --vitest=false`,
-        {
-          cwd: projectPath,
-          stdio: 'pipe',
-          timeout: 120000,
-        }
-      );
+      console.log('Running ng-add schematic with vitest=false...');
+      execSync(`npx ng add @danielsogl/angular-setup --project=${projectName} --vitest=false`, {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 120000,
+      });
 
       console.log('Verifying configuration files...');
       expect(fs.existsSync(path.join(projectPath, '.prettierrc.json'))).toBe(true);

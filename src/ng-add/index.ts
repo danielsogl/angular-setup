@@ -18,9 +18,9 @@ function installDependencies(): Rule {
   };
 }
 
-export function ngSetup(options: Schema): Rule {
+export function ngAdd(options: Schema): Rule {
   return (_tree: Tree, context: SchematicContext) => {
-    context.logger.info('Running ng-setup schematic...');
+    context.logger.info('Running ng-add schematic...');
     context.logger.info(`Project: ${options.project}`);
 
     const rules: Rule[] = [];
