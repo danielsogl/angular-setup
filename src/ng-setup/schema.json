@@ -14,22 +14,26 @@
     "eslint": {
       "type": "boolean",
       "description": "Add ESLint configuration",
-      "default": true
+      "default": true,
+      "x-prompt": "Would you like to add ESLint configuration?"
     },
     "prettier": {
       "type": "boolean",
       "description": "Add Prettier configuration",
-      "default": true
+      "default": true,
+      "x-prompt": "Would you like to add Prettier configuration?"
     },
     "lefthook": {
       "type": "boolean",
       "description": "Add Lefthook git hooks",
-      "default": true
+      "default": true,
+      "x-prompt": "Would you like to add Lefthook git hooks?"
     },
     "vitest": {
       "type": "boolean",
       "description": "Configure Vitest as test runner and remove Karma",
-      "default": true
+      "default": true,
+      "x-prompt": "Would you like to configure Vitest as test runner and remove Karma?"
     }
   },
   "required": ["project"]
