@@ -38,9 +38,38 @@ function addPrettierConfiguration(): Rule {
   };
 }
 
-function installPrettierDependencies(): Rule {
+function addLefthookConfiguration(): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    context.logger.info('Installing Prettier and prettier-eslint...');
+    context.logger.info('Adding Lefthook configuration...');
+
+    tree.create('lefthook.yml',
+`pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{js,ts,jsx,tsx,json,css,scss,html}"
+      run: npx eslint {staged_files} --fix
+      stage_fixed: true
+    format:
+      glob: "*.{js,ts,jsx,tsx,json,css,scss,html,md}"
+      run: npx prettier --write {staged_files}
+      stage_fixed: true
+
+pre-push:
+  commands:
+    test:
+      run: npm test
+    build:
+      run: npm run build
+`);
+
+    return tree;
+  };
+}
+
+function installDependencies(): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    context.logger.info('Installing dependencies...');
 
     const packageJson = tree.read('package.json');
     if (packageJson) {
@@ -51,6 +80,12 @@ function installPrettierDependencies(): Rule {
 
       json.devDependencies['prettier'] = 'latest';
       json.devDependencies['prettier-eslint'] = 'latest';
+      json.devDependencies['lefthook'] = 'latest';
+
+      if (!json.scripts) {
+        json.scripts = {};
+      }
+      json.scripts['prepare'] = 'lefthook install';
 
       tree.overwrite('package.json', JSON.stringify(json, null, 2));
 
@@ -73,7 +108,8 @@ export function ngSetup(options: Schema): Rule {
         project: options.project
       }),
       addPrettierConfiguration(),
-      installPrettierDependencies()
+      addLefthookConfiguration(),
+      installDependencies()
     ]);
   };
 }

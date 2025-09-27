@@ -124,4 +124,84 @@ describe('ng-setup integration', () => {
     expect(prettierConfig.arrowParens).toBe('always');
     expect(prettierConfig.endOfLine).toBe('lf');
   });
+
+  it('should add Lefthook configuration file', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    expect(tree.exists('lefthook.yml')).toBe(true);
+
+    const lefthookConfig = tree.readText('lefthook.yml');
+    expect(lefthookConfig).toContain('pre-commit:');
+    expect(lefthookConfig).toContain('pre-push:');
+  });
+
+  it('should configure pre-commit hook with lint and format commands', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const lefthookConfig = tree.readText('lefthook.yml');
+    expect(lefthookConfig).toContain('parallel: true');
+    expect(lefthookConfig).toContain('lint:');
+    expect(lefthookConfig).toContain('npx eslint {staged_files} --fix');
+    expect(lefthookConfig).toContain('stage_fixed: true');
+    expect(lefthookConfig).toContain('format:');
+    expect(lefthookConfig).toContain('npx prettier --write {staged_files}');
+  });
+
+  it('should configure pre-push hook with test and build commands', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const lefthookConfig = tree.readText('lefthook.yml');
+    expect(lefthookConfig).toContain('test:');
+    expect(lefthookConfig).toContain('npm test');
+    expect(lefthookConfig).toContain('build:');
+    expect(lefthookConfig).toContain('npm run build');
+  });
+
+  it('should add lefthook dependency to package.json', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const packageJson = tree.readJson('package.json') as any;
+    expect(packageJson.devDependencies).toBeDefined();
+    expect(packageJson.devDependencies['lefthook']).toBeDefined();
+  });
+
+  it('should add prepare script to package.json', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const packageJson = tree.readJson('package.json') as any;
+    expect(packageJson.scripts).toBeDefined();
+    expect(packageJson.scripts['prepare']).toBe('lefthook install');
+  });
+
+  it('should use glob patterns to target staged files only', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const lefthookConfig = tree.readText('lefthook.yml');
+    expect(lefthookConfig).toContain('{staged_files}');
+    expect(lefthookConfig).toContain('glob:');
+  });
 });
