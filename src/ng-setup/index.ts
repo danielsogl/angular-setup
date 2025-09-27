@@ -67,6 +67,33 @@ pre-push:
   };
 }
 
+function configureVitest(options: Schema): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    context.logger.info('Configuring Vitest...');
+
+    const angularJson = tree.read('angular.json');
+    if (angularJson) {
+      const json = JSON.parse(angularJson.toString());
+      const project = json.projects[options.project];
+
+      if (project && project.architect && project.architect.test) {
+        project.architect.test = {
+          builder: '@angular/build:unit-test',
+          options: {
+            tsConfig: project.architect.test.options?.tsConfig || 'tsconfig.spec.json',
+            runner: 'vitest',
+            buildTarget: `${options.project}::development`
+          }
+        };
+
+        tree.overwrite('angular.json', JSON.stringify(json, null, 2));
+      }
+    }
+
+    return tree;
+  };
+}
+
 function installDependencies(): Rule {
   return (tree: Tree, context: SchematicContext) => {
     context.logger.info('Installing dependencies...');
@@ -81,6 +108,30 @@ function installDependencies(): Rule {
       json.devDependencies['prettier'] = 'latest';
       json.devDependencies['prettier-eslint'] = 'latest';
       json.devDependencies['lefthook'] = 'latest';
+      json.devDependencies['vitest'] = 'latest';
+      json.devDependencies['jsdom'] = 'latest';
+
+      if (json.devDependencies['karma']) {
+        delete json.devDependencies['karma'];
+      }
+      if (json.devDependencies['karma-chrome-launcher']) {
+        delete json.devDependencies['karma-chrome-launcher'];
+      }
+      if (json.devDependencies['karma-coverage']) {
+        delete json.devDependencies['karma-coverage'];
+      }
+      if (json.devDependencies['karma-jasmine']) {
+        delete json.devDependencies['karma-jasmine'];
+      }
+      if (json.devDependencies['karma-jasmine-html-reporter']) {
+        delete json.devDependencies['karma-jasmine-html-reporter'];
+      }
+      if (json.devDependencies['jasmine-core']) {
+        delete json.devDependencies['jasmine-core'];
+      }
+      if (json.devDependencies['@types/jasmine']) {
+        delete json.devDependencies['@types/jasmine'];
+      }
 
       if (!json.scripts) {
         json.scripts = {};
@@ -90,6 +141,18 @@ function installDependencies(): Rule {
       tree.overwrite('package.json', JSON.stringify(json, null, 2));
 
       context.addTask(new NodePackageInstallTask());
+    }
+
+    return tree;
+  };
+}
+
+function removeKarmaConfig(): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    context.logger.info('Removing Karma configuration...');
+
+    if (tree.exists('karma.conf.js')) {
+      tree.delete('karma.conf.js');
     }
 
     return tree;
@@ -109,6 +172,8 @@ export function ngSetup(options: Schema): Rule {
       }),
       addPrettierConfiguration(),
       addLefthookConfiguration(),
+      configureVitest(options),
+      removeKarmaConfig(),
       installDependencies()
     ]);
   };

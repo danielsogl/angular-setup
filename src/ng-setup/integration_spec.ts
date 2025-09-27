@@ -204,4 +204,88 @@ describe('ng-setup integration', () => {
     expect(lefthookConfig).toContain('{staged_files}');
     expect(lefthookConfig).toContain('glob:');
   });
+
+  it('should configure Vitest as the test runner in angular.json', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const angularJson = tree.readJson('angular.json') as any;
+    const project = angularJson.projects['integration-test-app'];
+
+    expect(project.architect.test.builder).toBe('@angular/build:unit-test');
+    expect(project.architect.test.options.runner).toBe('vitest');
+    expect(project.architect.test.options.buildTarget).toBe('integration-test-app::development');
+  });
+
+  it('should add vitest and jsdom dependencies to package.json', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const packageJson = tree.readJson('package.json') as any;
+    expect(packageJson.devDependencies['vitest']).toBeDefined();
+    expect(packageJson.devDependencies['jsdom']).toBeDefined();
+  });
+
+  it('should remove Karma and Jasmine dependencies from package.json', async () => {
+    appTree.overwrite('package.json', JSON.stringify({
+      name: 'test-app',
+      version: '0.0.0',
+      devDependencies: {
+        'karma': '^6.0.0',
+        'karma-chrome-launcher': '^3.0.0',
+        'karma-coverage': '^2.0.0',
+        'karma-jasmine': '^5.0.0',
+        'karma-jasmine-html-reporter': '^2.0.0',
+        'jasmine-core': '^5.0.0',
+        '@types/jasmine': '^5.0.0'
+      }
+    }, null, 2));
+
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const packageJson = tree.readJson('package.json') as any;
+    expect(packageJson.devDependencies['karma']).toBeUndefined();
+    expect(packageJson.devDependencies['karma-chrome-launcher']).toBeUndefined();
+    expect(packageJson.devDependencies['karma-coverage']).toBeUndefined();
+    expect(packageJson.devDependencies['karma-jasmine']).toBeUndefined();
+    expect(packageJson.devDependencies['karma-jasmine-html-reporter']).toBeUndefined();
+    expect(packageJson.devDependencies['jasmine-core']).toBeUndefined();
+    expect(packageJson.devDependencies['@types/jasmine']).toBeUndefined();
+  });
+
+  it('should remove karma.conf.js if it exists', async () => {
+    appTree.create('karma.conf.js', 'module.exports = function(config) {}');
+
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    expect(tree.exists('karma.conf.js')).toBe(false);
+  });
+
+  it('should preserve tsConfig option from existing test configuration', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const angularJson = tree.readJson('angular.json') as any;
+    const project = angularJson.projects['integration-test-app'];
+
+    expect(project.architect.test.options.tsConfig).toBeDefined();
+    expect(project.architect.test.options.tsConfig).toContain('tsconfig.spec.json');
+  });
 });
