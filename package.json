@@ -4,12 +4,15 @@
   "description": "Angular project setup schematic with standard dependencies",
   "main": "dist/collection.json",
   "schematics": "./dist/collection.json",
+  "ng-update": {
+    "migrations": "./dist/migrations.json"
+  },
   "files": [
     "dist/**/*"
   ],
   "scripts": {
     "build": "tsc && npm run copy-files",
-    "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-setup/schema.json dist/ng-setup/schema.json",
+    "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-setup/schema.json dist/ng-setup/schema.json && cp src/migrations.json dist/migrations.json",
     "prepublishOnly": "npm run build",
     "test": "npm run build && vitest run"
   },
