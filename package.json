@@ -1,0 +1,31 @@
+{
+  "name": "@danielsogl/angular-setup",
+  "version": "1.0.0",
+  "description": "Angular project setup schematic with standard dependencies",
+  "main": "dist/collection.json",
+  "schematics": "./dist/collection.json",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc && npm run copy-files",
+    "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-setup/schema.json dist/ng-setup/schema.json",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["angular", "schematics", "setup", "eslint", "prettier", "vitest", "lefthook"],
+  "author": "Daniel Sogl",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielsogl/angular-setup.git"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@angular-devkit/core": "^20.3.3",
+    "@angular-devkit/schematics": "^20.3.3",
+    "@schematics/angular": "^20.3.3",
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
+  }
+}

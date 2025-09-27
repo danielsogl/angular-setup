@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-setup": {
+      "description": "Setup an Angular project with standard dependencies and configurations",
+      "factory": "./ng-setup/index#ngSetup",
+      "schema": "./ng-setup/schema.json"
+    }
+  }
+}
