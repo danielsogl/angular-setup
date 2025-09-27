@@ -289,3 +289,161 @@ describe('ng-setup integration', () => {
     expect(project.architect.test.options.tsConfig).toContain('tsconfig.spec.json');
   });
 });
+
+describe('ng-setup real project validation', () => {
+  it('should create real project, install dependencies, and verify tools are executable', async () => {
+    const { execSync } = await import('child_process');
+    const fs = await import('fs');
+    const os = await import('os');
+
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ng-real-test-'));
+    const projectName = 'validation-app';
+    const projectPath = path.join(testDir, projectName);
+
+    try {
+      console.log(`Creating real Angular project in ${testDir}...`);
+      execSync(`npx -y @angular/cli@latest new ${projectName} --routing=false --style=css --skip-git=true --package-manager=npm`, {
+        cwd: testDir,
+        stdio: 'pipe',
+        timeout: 180000,
+      });
+
+      const schematicPath = path.resolve(__dirname, '../../');
+      console.log(`Linking schematic from ${schematicPath}...`);
+
+      execSync(`npm link "${schematicPath}"`, {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 60000,
+      });
+
+      console.log('Running ng-setup schematic...');
+      execSync(`npx ng g @danielsogl/angular-setup:ng-setup --project=${projectName}`, {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 120000,
+      });
+
+      console.log('Verifying configuration files...');
+      expect(fs.existsSync(path.join(projectPath, '.prettierrc.json'))).toBe(true);
+      expect(fs.existsSync(path.join(projectPath, '.prettierignore'))).toBe(true);
+      expect(fs.existsSync(path.join(projectPath, 'lefthook.yml'))).toBe(true);
+      expect(fs.existsSync(path.join(projectPath, 'eslint.config.js'))).toBe(true);
+      expect(fs.existsSync(path.join(projectPath, 'karma.conf.js'))).toBe(false);
+
+      console.log('Verifying package.json modifications...');
+      let packageJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8'));
+
+      expect(packageJson.devDependencies['prettier']).toBeDefined();
+      expect(packageJson.devDependencies['prettier-eslint']).toBeDefined();
+      expect(packageJson.devDependencies['lefthook']).toBeDefined();
+      expect(packageJson.devDependencies['vitest']).toBeDefined();
+      expect(packageJson.devDependencies['jsdom']).toBeDefined();
+
+      const hasESLintDeps = packageJson.devDependencies['@angular-eslint/eslint-plugin'] ||
+                            packageJson.devDependencies['@angular-eslint/builder'] ||
+                            packageJson.devDependencies['eslint'];
+      expect(hasESLintDeps).toBeDefined();
+
+      expect(packageJson.devDependencies['karma']).toBeUndefined();
+      expect(packageJson.devDependencies['karma-chrome-launcher']).toBeUndefined();
+      expect(packageJson.devDependencies['karma-coverage']).toBeUndefined();
+      expect(packageJson.devDependencies['karma-jasmine']).toBeUndefined();
+
+      expect(packageJson.scripts['prepare']).toBe('lefthook install');
+
+      console.log('Verifying angular.json configuration...');
+      const angularJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'angular.json'), 'utf-8'));
+      const testConfig = angularJson.projects[projectName].architect.test;
+      expect(testConfig.builder).toBe('@angular/build:unit-test');
+      expect(testConfig.options.runner).toBe('vitest');
+
+      console.log('Removing prepare script temporarily...');
+      packageJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8'));
+      const prepareScript = packageJson.scripts['prepare'];
+      delete packageJson.scripts['prepare'];
+      fs.writeFileSync(path.join(projectPath, 'package.json'), JSON.stringify(packageJson, null, 2));
+
+      console.log('Installing all dependencies...');
+      execSync('npm install', {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 300000,
+      });
+
+      console.log('Initializing git repository...');
+      execSync('git init', {
+        cwd: projectPath,
+        stdio: 'pipe',
+      });
+
+      console.log('Running lefthook install...');
+      execSync('npx lefthook install', {
+        cwd: projectPath,
+        stdio: 'pipe',
+      });
+
+      packageJson.scripts['prepare'] = prepareScript;
+      fs.writeFileSync(path.join(projectPath, 'package.json'), JSON.stringify(packageJson, null, 2));
+
+      console.log('Verifying Prettier is executable...');
+      const prettierVersion = execSync('npx prettier --version', {
+        cwd: projectPath,
+        encoding: 'utf-8',
+        timeout: 10000,
+      });
+      expect(prettierVersion.trim()).toBeTruthy();
+      console.log(`✓ Prettier version: ${prettierVersion.trim()}`);
+
+      console.log('Verifying ESLint is executable...');
+      const eslintVersion = execSync('npx eslint --version', {
+        cwd: projectPath,
+        encoding: 'utf-8',
+        timeout: 10000,
+      });
+      expect(eslintVersion.trim()).toBeTruthy();
+      console.log(`✓ ESLint version: ${eslintVersion.trim()}`);
+
+      console.log('Verifying Lefthook is executable...');
+      const lefthookVersion = execSync('npx lefthook version', {
+        cwd: projectPath,
+        encoding: 'utf-8',
+        timeout: 10000,
+      });
+      expect(lefthookVersion.trim()).toBeTruthy();
+      console.log(`✓ Lefthook version: ${lefthookVersion.trim()}`);
+
+      console.log('Verifying Vitest is executable...');
+      const vitestVersion = execSync('npx vitest --version', {
+        cwd: projectPath,
+        encoding: 'utf-8',
+        timeout: 10000,
+      });
+      expect(vitestVersion.trim()).toBeTruthy();
+      console.log(`✓ Vitest version: ${vitestVersion.trim()}`);
+
+      console.log('Formatting project files with Prettier...');
+      execSync('npx prettier --write "src/**/*.{ts,html,css}"', {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 30000,
+      });
+      console.log('✓ Prettier formatting completed');
+
+      console.log('Running ESLint on project files...');
+      execSync('npx eslint .', {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 30000,
+      });
+      console.log('✓ ESLint check passed');
+
+      console.log('✅ All validations passed successfully!');
+    } finally {
+      if (fs.existsSync(testDir)) {
+        console.log(`Cleaning up test directory: ${testDir}`);
+        fs.rmSync(testDir, { recursive: true, force: true });
+      }
+    }
+  }, 600000);
+});
