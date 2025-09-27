@@ -291,7 +291,7 @@ describe('ng-setup integration', () => {
 });
 
 describe('ng-setup real project validation', () => {
-  it('should create real project, install dependencies, and verify tools are executable', async () => {
+  it('should create real project with all tools and verify they are executable', async () => {
     const { execSync } = await import('child_process');
     const fs = await import('fs');
     const os = await import('os');
@@ -439,6 +439,64 @@ describe('ng-setup real project validation', () => {
       console.log('✓ ESLint check passed');
 
       console.log('✅ All validations passed successfully!');
+    } finally {
+      if (fs.existsSync(testDir)) {
+        console.log(`Cleaning up test directory: ${testDir}`);
+        fs.rmSync(testDir, { recursive: true, force: true });
+      }
+    }
+  }, 600000);
+
+  it('should create project with only prettier and lefthook when vitest is disabled', async () => {
+    const { execSync } = await import('child_process');
+    const fs = await import('fs');
+    const os = await import('os');
+
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ng-selective-test-'));
+    const projectName = 'selective-app';
+    const projectPath = path.join(testDir, projectName);
+
+    try {
+      console.log(`Creating real Angular project in ${testDir}...`);
+      execSync(`npx -y @angular/cli@latest new ${projectName} --routing=false --style=css --skip-git=true --package-manager=npm`, {
+        cwd: testDir,
+        stdio: 'pipe',
+        timeout: 180000,
+      });
+
+      const schematicPath = path.resolve(__dirname, '../../');
+      execSync(`npm link "${schematicPath}"`, {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 60000,
+      });
+
+      console.log('Running ng-setup schematic with vitest=false...');
+      execSync(`npx ng g @danielsogl/angular-setup:ng-setup --project=${projectName} --vitest=false`, {
+        cwd: projectPath,
+        stdio: 'pipe',
+        timeout: 120000,
+      });
+
+      console.log('Verifying configuration files...');
+      expect(fs.existsSync(path.join(projectPath, '.prettierrc.json'))).toBe(true);
+      expect(fs.existsSync(path.join(projectPath, '.prettierignore'))).toBe(true);
+      expect(fs.existsSync(path.join(projectPath, 'lefthook.yml'))).toBe(true);
+      expect(fs.existsSync(path.join(projectPath, 'eslint.config.js'))).toBe(true);
+
+      console.log('Verifying package.json...');
+      const packageJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8'));
+      expect(packageJson.devDependencies['prettier']).toBeDefined();
+      expect(packageJson.devDependencies['lefthook']).toBeDefined();
+      expect(packageJson.devDependencies['vitest']).toBeUndefined();
+      expect(packageJson.devDependencies['jsdom']).toBeUndefined();
+
+      console.log('Verifying angular.json was not modified...');
+      const angularJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'angular.json'), 'utf-8'));
+      const testConfig = angularJson.projects[projectName].architect.test;
+      expect(testConfig.builder).not.toBe('@angular/build:unit-test');
+
+      console.log('✅ Selective tool installation validated successfully!');
     } finally {
       if (fs.existsSync(testDir)) {
         console.log(`Cleaning up test directory: ${testDir}`);

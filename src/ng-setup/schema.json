@@ -10,6 +10,26 @@
       "$default": {
         "$source": "projectName"
       }
+    },
+    "eslint": {
+      "type": "boolean",
+      "description": "Add ESLint configuration",
+      "default": true
+    },
+    "prettier": {
+      "type": "boolean",
+      "description": "Add Prettier configuration",
+      "default": true
+    },
+    "lefthook": {
+      "type": "boolean",
+      "description": "Add Lefthook git hooks",
+      "default": true
+    },
+    "vitest": {
+      "type": "boolean",
+      "description": "Configure Vitest as test runner and remove Karma",
+      "default": true
     }
   },
   "required": ["project"]
