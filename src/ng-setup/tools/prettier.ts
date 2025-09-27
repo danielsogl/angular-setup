@@ -12,7 +12,7 @@ export function addPrettierConfiguration(): Rule {
       tabWidth: 2,
       useTabs: false,
       arrowParens: 'always',
-      endOfLine: 'lf'
+      endOfLine: 'lf',
     };
 
     tree.create('.prettierrc.json', JSON.stringify(prettierConfig, null, 2));
@@ -27,7 +27,7 @@ export function addPrettierConfiguration(): Rule {
       '*.min.css',
       'package-lock.json',
       'yarn.lock',
-      'pnpm-lock.yaml'
+      'pnpm-lock.yaml',
     ].join('\n');
 
     tree.create('.prettierignore', prettierIgnore);

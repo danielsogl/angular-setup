@@ -1,6 +1,11 @@
 import { Tree } from '@angular-devkit/schematics';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { configureVitest, removeKarmaConfig, addVitestDependencies, removeKarmaDependencies } from './vitest';
+import {
+  configureVitest,
+  removeKarmaConfig,
+  addVitestDependencies,
+  removeKarmaDependencies,
+} from './vitest';
 import { Schema } from '../schema';
 
 describe('Vitest Tool', () => {
@@ -10,33 +15,40 @@ describe('Vitest Tool', () => {
     logger: {
       info: () => {},
       warn: () => {},
-      error: () => {}
-    }
+      error: () => {},
+    },
   };
 
   beforeEach(() => {
     tree = Tree.empty();
     tree.create('package.json', JSON.stringify({ name: 'test', version: '1.0.0' }, null, 2));
-    tree.create('angular.json', JSON.stringify({
-      projects: {
-        'test-app': {
-          architect: {
-            test: {
-              builder: '@angular-devkit/build-angular:karma',
-              options: {
-                tsConfig: 'tsconfig.spec.json'
-              }
-            }
-          }
-        }
-      }
-    }, null, 2));
+    tree.create(
+      'angular.json',
+      JSON.stringify(
+        {
+          projects: {
+            'test-app': {
+              architect: {
+                test: {
+                  builder: '@angular-devkit/build-angular:karma',
+                  options: {
+                    tsConfig: 'tsconfig.spec.json',
+                  },
+                },
+              },
+            },
+          },
+        },
+        null,
+        2
+      )
+    );
   });
 
   describe('configureVitest', () => {
     it('should update angular.json test configuration', async () => {
       const rule = configureVitest(options);
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const angularJson = JSON.parse(resultTree.readText('angular.json'));
       const testConfig = angularJson.projects['test-app'].architect.test;
@@ -47,7 +59,7 @@ describe('Vitest Tool', () => {
 
     it('should set buildTarget correctly', async () => {
       const rule = configureVitest(options);
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const angularJson = JSON.parse(resultTree.readText('angular.json'));
       const testConfig = angularJson.projects['test-app'].architect.test;
@@ -57,7 +69,7 @@ describe('Vitest Tool', () => {
 
     it('should preserve existing tsConfig', async () => {
       const rule = configureVitest(options);
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const angularJson = JSON.parse(resultTree.readText('angular.json'));
       const testConfig = angularJson.projects['test-app'].architect.test;
@@ -71,14 +83,14 @@ describe('Vitest Tool', () => {
       tree.create('karma.conf.js', 'module.exports = function(config) {}');
 
       const rule = removeKarmaConfig();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       expect(resultTree.exists('karma.conf.js')).toBe(false);
     });
 
     it('should not fail if karma.conf.js does not exist', async () => {
       const rule = removeKarmaConfig();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       expect(resultTree.exists('karma.conf.js')).toBe(false);
     });
@@ -87,7 +99,7 @@ describe('Vitest Tool', () => {
   describe('addVitestDependencies', () => {
     it('should add vitest to devDependencies', async () => {
       const rule = addVitestDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['vitest']).toBe('latest');
@@ -95,7 +107,7 @@ describe('Vitest Tool', () => {
 
     it('should add jsdom to devDependencies', async () => {
       const rule = addVitestDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['jsdom']).toBe('latest');
@@ -104,25 +116,32 @@ describe('Vitest Tool', () => {
 
   describe('removeKarmaDependencies', () => {
     beforeEach(() => {
-      tree.overwrite('package.json', JSON.stringify({
-        name: 'test',
-        version: '1.0.0',
-        devDependencies: {
-          'karma': '^6.0.0',
-          'karma-chrome-launcher': '^3.0.0',
-          'karma-coverage': '^2.0.0',
-          'karma-jasmine': '^5.0.0',
-          'karma-jasmine-html-reporter': '^2.0.0',
-          'jasmine-core': '^5.0.0',
-          '@types/jasmine': '^5.0.0',
-          'typescript': '^5.0.0'
-        }
-      }, null, 2));
+      tree.overwrite(
+        'package.json',
+        JSON.stringify(
+          {
+            name: 'test',
+            version: '1.0.0',
+            devDependencies: {
+              karma: '^6.0.0',
+              'karma-chrome-launcher': '^3.0.0',
+              'karma-coverage': '^2.0.0',
+              'karma-jasmine': '^5.0.0',
+              'karma-jasmine-html-reporter': '^2.0.0',
+              'jasmine-core': '^5.0.0',
+              '@types/jasmine': '^5.0.0',
+              typescript: '^5.0.0',
+            },
+          },
+          null,
+          2
+        )
+      );
     });
 
     it('should remove karma dependencies', async () => {
       const rule = removeKarmaDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['karma']).toBeUndefined();
@@ -134,7 +153,7 @@ describe('Vitest Tool', () => {
 
     it('should remove jasmine dependencies', async () => {
       const rule = removeKarmaDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['jasmine-core']).toBeUndefined();
@@ -143,7 +162,7 @@ describe('Vitest Tool', () => {
 
     it('should preserve other dependencies', async () => {
       const rule = removeKarmaDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['typescript']).toBe('^5.0.0');

@@ -50,17 +50,20 @@ ng generate @danielsogl/angular-setup:ng-setup --eslint=true --prettier=true --l
 ## What Gets Installed
 
 ### ESLint
+
 - Installs `@angular-eslint/schematics`
 - Configures ESLint with Angular-specific rules
 - Adds lint scripts to `package.json`
 
 ### Prettier
+
 - Installs Prettier
 - Adds `.prettierrc.json` with configuration
 - Adds `.prettierignore`
 - Adds format scripts to `package.json`
 
 ### Lefthook
+
 - Installs Lefthook
 - Creates `lefthook.yml` configuration
 - Sets up pre-commit hooks for:
@@ -69,6 +72,7 @@ ng generate @danielsogl/angular-setup:ng-setup --eslint=true --prettier=true --l
   - Type checking
 
 ### Vitest
+
 - Installs Vitest and related dependencies
 - Configures Vitest in `angular.json`
 - Removes Karma configuration
@@ -100,6 +104,7 @@ This project uses [release-please](https://github.com/googleapis/release-please)
    - Updates the changelog
 
 Use [Conventional Commits](https://www.conventionalcommits.org/) for your commit messages:
+
 - `feat:` for new features
 - `fix:` for bug fixes
 - `docs:` for documentation changes

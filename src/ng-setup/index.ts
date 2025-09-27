@@ -4,7 +4,12 @@ import { Schema } from './schema';
 import { addESLint } from './tools/eslint';
 import { addPrettierConfiguration, addPrettierDependencies } from './tools/prettier';
 import { addLefthookConfiguration, addLefthookDependencies } from './tools/lefthook';
-import { configureVitest, removeKarmaConfig, addVitestDependencies, removeKarmaDependencies } from './tools/vitest';
+import {
+  configureVitest,
+  removeKarmaConfig,
+  addVitestDependencies,
+  removeKarmaDependencies,
+} from './tools/vitest';
 
 function installDependencies(): Rule {
   return (tree: Tree, context: SchematicContext) => {

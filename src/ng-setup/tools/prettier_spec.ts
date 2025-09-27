@@ -9,8 +9,8 @@ describe('Prettier Tool', () => {
     logger: {
       info: () => {},
       warn: () => {},
-      error: () => {}
-    }
+      error: () => {},
+    },
   };
 
   beforeEach(() => {
@@ -21,14 +21,14 @@ describe('Prettier Tool', () => {
   describe('addPrettierConfiguration', () => {
     it('should create .prettierrc.json file', async () => {
       const rule = addPrettierConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       expect(resultTree.exists('.prettierrc.json')).toBe(true);
     });
 
     it('should create .prettierrc.json with correct configuration', async () => {
       const rule = addPrettierConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const config = JSON.parse(resultTree.readText('.prettierrc.json'));
       expect(config.semi).toBe(true);
@@ -43,14 +43,14 @@ describe('Prettier Tool', () => {
 
     it('should create .prettierignore file', async () => {
       const rule = addPrettierConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       expect(resultTree.exists('.prettierignore')).toBe(true);
     });
 
     it('should include common ignore patterns in .prettierignore', async () => {
       const rule = addPrettierConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const ignoreContent = resultTree.readText('.prettierignore');
       expect(ignoreContent).toContain('node_modules');
@@ -63,7 +63,7 @@ describe('Prettier Tool', () => {
   describe('addPrettierDependencies', () => {
     it('should add prettier to devDependencies', async () => {
       const rule = addPrettierDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['prettier']).toBe('latest');
@@ -71,7 +71,7 @@ describe('Prettier Tool', () => {
 
     it('should add prettier-eslint to devDependencies', async () => {
       const rule = addPrettierDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['prettier-eslint']).toBe('latest');
@@ -81,7 +81,7 @@ describe('Prettier Tool', () => {
       tree.overwrite('package.json', JSON.stringify({ name: 'test' }, null, 2));
 
       const rule = addPrettierDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies).toBeDefined();

@@ -15,21 +15,26 @@ describe('ng-setup integration', () => {
     appTree = await runner.runExternalSchematic('@schematics/angular', 'workspace', {
       name: 'test-workspace',
       version: '20.0.0',
-      newProjectRoot: 'projects'
+      newProjectRoot: 'projects',
     });
 
-    appTree = await runner.runExternalSchematic('@schematics/angular', 'application', {
-      name: 'integration-test-app',
-      projectRoot: '',
-      standalone: true,
-      routing: true,
-      style: 'css'
-    }, appTree);
+    appTree = await runner.runExternalSchematic(
+      '@schematics/angular',
+      'application',
+      {
+        name: 'integration-test-app',
+        projectRoot: '',
+        standalone: true,
+        routing: true,
+        style: 'css',
+      },
+      appTree
+    );
   });
 
   it('should successfully setup a fresh Angular project with ESLint', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -42,12 +47,12 @@ describe('ng-setup integration', () => {
 
   it('should add ESLint configuration files to the project', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
 
-    expect(tree.files.some(file => file.includes('eslint'))).toBe(true);
+    expect(tree.files.some((file) => file.includes('eslint'))).toBe(true);
   });
 
   it('should work with default project from angular.json', async () => {
@@ -56,7 +61,7 @@ describe('ng-setup integration', () => {
     appTree.overwrite('angular.json', JSON.stringify(angularJson, null, 2));
 
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -67,7 +72,7 @@ describe('ng-setup integration', () => {
 
   it('should add Prettier configuration file', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -84,7 +89,7 @@ describe('ng-setup integration', () => {
 
   it('should add Prettier ignore file', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -100,7 +105,7 @@ describe('ng-setup integration', () => {
 
   it('should add prettier and prettier-eslint dependencies to package.json', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -113,7 +118,7 @@ describe('ng-setup integration', () => {
 
   it('should configure prettier with correct settings', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -127,7 +132,7 @@ describe('ng-setup integration', () => {
 
   it('should add Lefthook configuration file', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -141,7 +146,7 @@ describe('ng-setup integration', () => {
 
   it('should configure pre-commit hook with lint and format commands', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -157,7 +162,7 @@ describe('ng-setup integration', () => {
 
   it('should configure pre-push hook with test and build commands', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -171,7 +176,7 @@ describe('ng-setup integration', () => {
 
   it('should add lefthook dependency to package.json', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -183,7 +188,7 @@ describe('ng-setup integration', () => {
 
   it('should add prepare script to package.json', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -195,7 +200,7 @@ describe('ng-setup integration', () => {
 
   it('should use glob patterns to target staged files only', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -207,7 +212,7 @@ describe('ng-setup integration', () => {
 
   it('should configure Vitest as the test runner in angular.json', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -222,7 +227,7 @@ describe('ng-setup integration', () => {
 
   it('should add vitest and jsdom dependencies to package.json', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -233,22 +238,29 @@ describe('ng-setup integration', () => {
   });
 
   it('should remove Karma and Jasmine dependencies from package.json', async () => {
-    appTree.overwrite('package.json', JSON.stringify({
-      name: 'test-app',
-      version: '0.0.0',
-      devDependencies: {
-        'karma': '^6.0.0',
-        'karma-chrome-launcher': '^3.0.0',
-        'karma-coverage': '^2.0.0',
-        'karma-jasmine': '^5.0.0',
-        'karma-jasmine-html-reporter': '^2.0.0',
-        'jasmine-core': '^5.0.0',
-        '@types/jasmine': '^5.0.0'
-      }
-    }, null, 2));
+    appTree.overwrite(
+      'package.json',
+      JSON.stringify(
+        {
+          name: 'test-app',
+          version: '0.0.0',
+          devDependencies: {
+            karma: '^6.0.0',
+            'karma-chrome-launcher': '^3.0.0',
+            'karma-coverage': '^2.0.0',
+            'karma-jasmine': '^5.0.0',
+            'karma-jasmine-html-reporter': '^2.0.0',
+            'jasmine-core': '^5.0.0',
+            '@types/jasmine': '^5.0.0',
+          },
+        },
+        null,
+        2
+      )
+    );
 
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -267,7 +279,7 @@ describe('ng-setup integration', () => {
     appTree.create('karma.conf.js', 'module.exports = function(config) {}');
 
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -277,7 +289,7 @@ describe('ng-setup integration', () => {
 
   it('should preserve tsConfig option from existing test configuration', async () => {
     const options: Schema = {
-      project: 'integration-test-app'
+      project: 'integration-test-app',
     };
 
     const tree = await runner.runSchematic('ng-setup', options, appTree);
@@ -302,11 +314,14 @@ describe('ng-setup real project validation', () => {
 
     try {
       console.log(`Creating real Angular project in ${testDir}...`);
-      execSync(`npx -y @angular/cli@latest new ${projectName} --routing=false --style=css --skip-git=true --package-manager=npm`, {
-        cwd: testDir,
-        stdio: 'pipe',
-        timeout: 180000,
-      });
+      execSync(
+        `npx -y @angular/cli@latest new ${projectName} --routing=false --style=css --skip-git=true --package-manager=npm`,
+        {
+          cwd: testDir,
+          stdio: 'pipe',
+          timeout: 180000,
+        }
+      );
 
       const schematicPath = path.resolve(__dirname, '../../');
       console.log(`Linking schematic from ${schematicPath}...`);
@@ -332,7 +347,9 @@ describe('ng-setup real project validation', () => {
       expect(fs.existsSync(path.join(projectPath, 'karma.conf.js'))).toBe(false);
 
       console.log('Verifying package.json modifications...');
-      let packageJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8'));
+      let packageJson = JSON.parse(
+        fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8')
+      );
 
       expect(packageJson.devDependencies['prettier']).toBeDefined();
       expect(packageJson.devDependencies['prettier-eslint']).toBeDefined();
@@ -340,9 +357,10 @@ describe('ng-setup real project validation', () => {
       expect(packageJson.devDependencies['vitest']).toBeDefined();
       expect(packageJson.devDependencies['jsdom']).toBeDefined();
 
-      const hasESLintDeps = packageJson.devDependencies['@angular-eslint/eslint-plugin'] ||
-                            packageJson.devDependencies['@angular-eslint/builder'] ||
-                            packageJson.devDependencies['eslint'];
+      const hasESLintDeps =
+        packageJson.devDependencies['@angular-eslint/eslint-plugin'] ||
+        packageJson.devDependencies['@angular-eslint/builder'] ||
+        packageJson.devDependencies['eslint'];
       expect(hasESLintDeps).toBeDefined();
 
       expect(packageJson.devDependencies['karma']).toBeUndefined();
@@ -353,7 +371,9 @@ describe('ng-setup real project validation', () => {
       expect(packageJson.scripts['prepare']).toBe('lefthook install');
 
       console.log('Verifying angular.json configuration...');
-      const angularJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'angular.json'), 'utf-8'));
+      const angularJson = JSON.parse(
+        fs.readFileSync(path.join(projectPath, 'angular.json'), 'utf-8')
+      );
       const testConfig = angularJson.projects[projectName].architect.test;
       expect(testConfig.builder).toBe('@angular/build:unit-test');
       expect(testConfig.options.runner).toBe('vitest');
@@ -362,7 +382,10 @@ describe('ng-setup real project validation', () => {
       packageJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8'));
       const prepareScript = packageJson.scripts['prepare'];
       delete packageJson.scripts['prepare'];
-      fs.writeFileSync(path.join(projectPath, 'package.json'), JSON.stringify(packageJson, null, 2));
+      fs.writeFileSync(
+        path.join(projectPath, 'package.json'),
+        JSON.stringify(packageJson, null, 2)
+      );
 
       console.log('Installing all dependencies...');
       execSync('npm install', {
@@ -384,7 +407,10 @@ describe('ng-setup real project validation', () => {
       });
 
       packageJson.scripts['prepare'] = prepareScript;
-      fs.writeFileSync(path.join(projectPath, 'package.json'), JSON.stringify(packageJson, null, 2));
+      fs.writeFileSync(
+        path.join(projectPath, 'package.json'),
+        JSON.stringify(packageJson, null, 2)
+      );
 
       console.log('Verifying Prettier is executable...');
       const prettierVersion = execSync('npx prettier --version', {
@@ -458,11 +484,14 @@ describe('ng-setup real project validation', () => {
 
     try {
       console.log(`Creating real Angular project in ${testDir}...`);
-      execSync(`npx -y @angular/cli@latest new ${projectName} --routing=false --style=css --skip-git=true --package-manager=npm`, {
-        cwd: testDir,
-        stdio: 'pipe',
-        timeout: 180000,
-      });
+      execSync(
+        `npx -y @angular/cli@latest new ${projectName} --routing=false --style=css --skip-git=true --package-manager=npm`,
+        {
+          cwd: testDir,
+          stdio: 'pipe',
+          timeout: 180000,
+        }
+      );
 
       const schematicPath = path.resolve(__dirname, '../../');
       execSync(`npm link "${schematicPath}"`, {
@@ -472,11 +501,14 @@ describe('ng-setup real project validation', () => {
       });
 
       console.log('Running ng-setup schematic with vitest=false...');
-      execSync(`npx ng g @danielsogl/angular-setup:ng-setup --project=${projectName} --vitest=false`, {
-        cwd: projectPath,
-        stdio: 'pipe',
-        timeout: 120000,
-      });
+      execSync(
+        `npx ng g @danielsogl/angular-setup:ng-setup --project=${projectName} --vitest=false`,
+        {
+          cwd: projectPath,
+          stdio: 'pipe',
+          timeout: 120000,
+        }
+      );
 
       console.log('Verifying configuration files...');
       expect(fs.existsSync(path.join(projectPath, '.prettierrc.json'))).toBe(true);
@@ -485,14 +517,18 @@ describe('ng-setup real project validation', () => {
       expect(fs.existsSync(path.join(projectPath, 'eslint.config.js'))).toBe(true);
 
       console.log('Verifying package.json...');
-      const packageJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8'));
+      const packageJson = JSON.parse(
+        fs.readFileSync(path.join(projectPath, 'package.json'), 'utf-8')
+      );
       expect(packageJson.devDependencies['prettier']).toBeDefined();
       expect(packageJson.devDependencies['lefthook']).toBeDefined();
       expect(packageJson.devDependencies['vitest']).toBeUndefined();
       expect(packageJson.devDependencies['jsdom']).toBeUndefined();
 
       console.log('Verifying angular.json was not modified...');
-      const angularJson = JSON.parse(fs.readFileSync(path.join(projectPath, 'angular.json'), 'utf-8'));
+      const angularJson = JSON.parse(
+        fs.readFileSync(path.join(projectPath, 'angular.json'), 'utf-8')
+      );
       const testConfig = angularJson.projects[projectName].architect.test;
       expect(testConfig.builder).not.toBe('@angular/build:unit-test');
 

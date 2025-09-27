@@ -14,7 +14,12 @@
     "build": "tsc && npm run copy-files",
     "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-setup/schema.json dist/ng-setup/schema.json && cp src/migrations.json dist/migrations.json",
     "prepublishOnly": "npm run build",
-    "test": "npm run build && vitest run"
+    "test": "npm run build && vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prepare": "lefthook install"
   },
   "keywords": [
     "angular",
@@ -39,6 +44,13 @@
     "@angular-eslint/schematics": "^20.3.0",
     "@schematics/angular": "^20.3.3",
     "@types/node": "^24.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "lefthook": "^1.13.4",
+    "prettier": "^3.6.2",
     "typescript": "^5.9.2",
     "vitest": "^3.0.0"
   }

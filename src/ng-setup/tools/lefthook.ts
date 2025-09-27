@@ -4,8 +4,9 @@ export function addLefthookConfiguration(): Rule {
   return (tree: Tree, context: SchematicContext) => {
     context.logger.info('Adding Lefthook configuration...');
 
-    tree.create('lefthook.yml',
-`pre-commit:
+    tree.create(
+      'lefthook.yml',
+      `pre-commit:
   parallel: true
   commands:
     lint:
@@ -23,7 +24,8 @@ pre-push:
       run: npm test
     build:
       run: npm run build
-`);
+`
+    );
 
     return tree;
   };

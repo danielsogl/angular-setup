@@ -8,8 +8,8 @@ describe('Lefthook Tool', () => {
     logger: {
       info: () => {},
       warn: () => {},
-      error: () => {}
-    }
+      error: () => {},
+    },
   };
 
   beforeEach(() => {
@@ -20,14 +20,14 @@ describe('Lefthook Tool', () => {
   describe('addLefthookConfiguration', () => {
     it('should create lefthook.yml file', async () => {
       const rule = addLefthookConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       expect(resultTree.exists('lefthook.yml')).toBe(true);
     });
 
     it('should configure pre-commit hook with lint and format commands', async () => {
       const rule = addLefthookConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const config = resultTree.readText('lefthook.yml');
       expect(config).toContain('pre-commit:');
@@ -41,7 +41,7 @@ describe('Lefthook Tool', () => {
 
     it('should configure pre-push hook with test and build commands', async () => {
       const rule = addLefthookConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const config = resultTree.readText('lefthook.yml');
       expect(config).toContain('pre-push:');
@@ -53,7 +53,7 @@ describe('Lefthook Tool', () => {
 
     it('should use glob patterns for staged files', async () => {
       const rule = addLefthookConfiguration();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const config = resultTree.readText('lefthook.yml');
       expect(config).toContain('glob:');
@@ -64,7 +64,7 @@ describe('Lefthook Tool', () => {
   describe('addLefthookDependencies', () => {
     it('should add lefthook to devDependencies', async () => {
       const rule = addLefthookDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies['lefthook']).toBe('latest');
@@ -72,7 +72,7 @@ describe('Lefthook Tool', () => {
 
     it('should add prepare script to package.json', async () => {
       const rule = addLefthookDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.scripts['prepare']).toBe('lefthook install');
@@ -82,7 +82,7 @@ describe('Lefthook Tool', () => {
       tree.overwrite('package.json', JSON.stringify({ name: 'test' }, null, 2));
 
       const rule = addLefthookDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.devDependencies).toBeDefined();
@@ -93,7 +93,7 @@ describe('Lefthook Tool', () => {
       tree.overwrite('package.json', JSON.stringify({ name: 'test' }, null, 2));
 
       const rule = addLefthookDependencies();
-      const resultTree = await rule(tree, mockContext as any) as Tree;
+      const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
       expect(packageJson.scripts).toBeDefined();

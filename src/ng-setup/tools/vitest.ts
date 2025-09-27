@@ -16,8 +16,8 @@ export function configureVitest(options: Schema): Rule {
           options: {
             tsConfig: project.architect.test.options?.tsConfig || 'tsconfig.spec.json',
             runner: 'vitest',
-            buildTarget: `${options.project}::development`
-          }
+            buildTarget: `${options.project}::development`,
+          },
         };
 
         tree.overwrite('angular.json', JSON.stringify(json, null, 2));
@@ -77,10 +77,10 @@ export function removeKarmaDependencies(): Rule {
           'karma-jasmine',
           'karma-jasmine-html-reporter',
           'jasmine-core',
-          '@types/jasmine'
+          '@types/jasmine',
         ];
 
-        karmaPackages.forEach(pkg => {
+        karmaPackages.forEach((pkg) => {
           if (json.devDependencies[pkg]) {
             delete json.devDependencies[pkg];
           }
