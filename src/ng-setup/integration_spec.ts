@@ -64,4 +64,64 @@ describe('ng-setup integration', () => {
     expect(tree).toBeDefined();
     expect(tree.files.length).toBeGreaterThan(0);
   });
+
+  it('should add Prettier configuration file', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    expect(tree.exists('.prettierrc.json')).toBe(true);
+
+    const prettierConfig = tree.readJson('.prettierrc.json') as any;
+    expect(prettierConfig).toBeDefined();
+    expect(prettierConfig.semi).toBe(true);
+    expect(prettierConfig.singleQuote).toBe(true);
+    expect(prettierConfig.printWidth).toBe(100);
+    expect(prettierConfig.tabWidth).toBe(2);
+  });
+
+  it('should add Prettier ignore file', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    expect(tree.exists('.prettierignore')).toBe(true);
+
+    const prettierIgnore = tree.readText('.prettierignore');
+    expect(prettierIgnore).toContain('node_modules');
+    expect(prettierIgnore).toContain('dist');
+    expect(prettierIgnore).toContain('coverage');
+    expect(prettierIgnore).toContain('.angular');
+  });
+
+  it('should add prettier and prettier-eslint dependencies to package.json', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const packageJson = tree.readJson('package.json') as any;
+    expect(packageJson.devDependencies).toBeDefined();
+    expect(packageJson.devDependencies['prettier']).toBeDefined();
+    expect(packageJson.devDependencies['prettier-eslint']).toBeDefined();
+  });
+
+  it('should configure prettier with correct settings', async () => {
+    const options: Schema = {
+      project: 'integration-test-app'
+    };
+
+    const tree = await runner.runSchematic('ng-setup', options, appTree);
+
+    const prettierConfig = tree.readJson('.prettierrc.json') as any;
+    expect(prettierConfig.trailingComma).toBe('es5');
+    expect(prettierConfig.useTabs).toBe(false);
+    expect(prettierConfig.arrowParens).toBe('always');
+    expect(prettierConfig.endOfLine).toBe('lf');
+  });
 });
