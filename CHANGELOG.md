@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/danielsogl/angular-setup/compare/v1.0.0...v1.1.0) (2025-09-27)
+
+
+### Features
+
+* update Angular setup schematic to replace ng-setup with ng-add, add ESLint, Prettier, Lefthook, and Vitest configuration options ([63f86b2](https://github.com/danielsogl/angular-setup/commit/63f86b216ec0c2646001e9261a484b162f3fbfde))
+
 ## 1.0.0 (2025-09-27)
 
 
