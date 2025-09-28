@@ -1,9 +1,10 @@
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
 
 function getVersionFromPackageJson(packageName: string): string {
   try {
-    const packageJsonPath = join(process.cwd(), 'package.json');
+    const currentDir = dirname(__filename);
+    const packageJsonPath = join(currentDir, '..', '..', '..', 'package.json');
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     return packageJson.devDependencies?.[packageName] || 'latest';
   } catch {
@@ -11,17 +12,29 @@ function getVersionFromPackageJson(packageName: string): string {
   }
 }
 
+let cachedVersions: Record<string, string> | null = null;
+
+function getCachedVersion(packageName: string): string {
+  cachedVersions ??= {
+    prettier: getVersionFromPackageJson('prettier'),
+    lefthook: getVersionFromPackageJson('lefthook'),
+    vitest: getVersionFromPackageJson('vitest'),
+    jsdom: getVersionFromPackageJson('jsdom'),
+  };
+  return cachedVersions[packageName] || 'latest';
+}
+
 export const DEPENDENCY_VERSIONS = {
   get prettier() {
-    return getVersionFromPackageJson('prettier');
+    return getCachedVersion('prettier');
   },
   get lefthook() {
-    return getVersionFromPackageJson('lefthook');
+    return getCachedVersion('lefthook');
   },
   get vitest() {
-    return getVersionFromPackageJson('vitest');
+    return getCachedVersion('vitest');
   },
   get jsdom() {
-    return getVersionFromPackageJson('jsdom');
+    return getCachedVersion('jsdom');
   },
 };

@@ -17,6 +17,8 @@ export default [
       },
       globals: {
         process: 'readonly',
+        __filename: 'readonly',
+        __dirname: 'readonly',
       },
     },
     plugins: {
