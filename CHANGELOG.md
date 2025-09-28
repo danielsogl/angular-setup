@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://github.com/danielsogl/angular-setup/compare/v1.1.1...v1.2.0) (2025-09-28)
+
+
+### Features
+
+* add __filename and __dirname globals to ESLint config; optimize version retrieval in ng-add utility ([b955e60](https://github.com/danielsogl/angular-setup/commit/b955e600da7aab68235ded51fd6d9bae3e35d3de))
+* add is-ci package to manage CI environments and update prepare script accordingly ([9e9fc0a](https://github.com/danielsogl/angular-setup/commit/9e9fc0a17562fa0ac449d236204d66b557bc702f))
+* add MIT License file to the project ([8272b7d](https://github.com/danielsogl/angular-setup/commit/8272b7dd1958146a14f844d3299c25d501fedc04))
+* add Prettier formatting scripts to package.json during ngAdd ([334ecd3](https://github.com/danielsogl/angular-setup/commit/334ecd3aee8dea46cd98dfbd0fa40d616728ea6c))
+* enhance ng-add schematic with validation checks and improved file operations ([43d7b7b](https://github.com/danielsogl/angular-setup/commit/43d7b7bb90743b94a2debc6eeb5b9f74a83588a8))
+* integrate package-manager-detector to dynamically identify package manager during dependency installation in ng-add ([141582f](https://github.com/danielsogl/angular-setup/commit/141582feac17ec344a36a50492e46e087fc7bcfc))
+* move @danielsogl/angular-setup to devDependencies in package.json during ngAdd ([e1ef573](https://github.com/danielsogl/angular-setup/commit/e1ef573a243d81e97b471126e15876fc53559020))
+* update Vitest configuration to target Node.js 20 ([a701020](https://github.com/danielsogl/angular-setup/commit/a7010204fcdca6eb270fd1a2be9d2d5703546097))
+
 ## [1.1.1](https://github.com/danielsogl/angular-setup/compare/v1.1.0...v1.1.1) (2025-09-28)
 
 
