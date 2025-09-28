@@ -113,7 +113,6 @@ describe('ng-add integration', () => {
     const packageJson = tree.readJson('package.json') as any;
     expect(packageJson.devDependencies).toBeDefined();
     expect(packageJson.devDependencies['prettier']).toBeDefined();
-    expect(packageJson.devDependencies['prettier-eslint']).toBeDefined();
   });
 
   it('should configure prettier with correct settings', async () => {
@@ -244,6 +243,9 @@ describe('ng-add integration', () => {
         {
           name: 'test-app',
           version: '0.0.0',
+          dependencies: {
+            '@angular/core': '^20.0.0',
+          },
           devDependencies: {
             karma: '^6.0.0',
             'karma-chrome-launcher': '^3.0.0',
@@ -352,7 +354,6 @@ describe('ng-add real project validation', () => {
       );
 
       expect(packageJson.devDependencies['prettier']).toBeDefined();
-      expect(packageJson.devDependencies['prettier-eslint']).toBeDefined();
       expect(packageJson.devDependencies['lefthook']).toBeDefined();
       expect(packageJson.devDependencies['vitest']).toBeDefined();
       expect(packageJson.devDependencies['jsdom']).toBeDefined();

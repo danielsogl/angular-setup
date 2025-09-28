@@ -1,5 +1,8 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "name": "@danielsogl/angular-setup",
+  "version": "1.1.1",
+  "description": "Angular schematics for setting up projects with ESLint, Prettier, Lefthook, and Vitest",
   "schematics": {
     "ng-add": {
       "description": "Setup an Angular project with standard dependencies and configurations",

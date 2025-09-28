@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "tsc && npm run copy-files",
-    "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-add/schema.json dist/ng-add/schema.json && cp src/migrations.json dist/migrations.json",
+    "copy-files": "cp src/collection.json dist/collection.json && cp src/ng-add/schema.json dist/ng-add/schema.json && cp src/migrations.json dist/migrations.json && cp -r src/ng-add/templates dist/ng-add/",
     "prepublishOnly": "npm run build",
     "test": "npm run build && vitest run",
     "format": "prettier --write .",
@@ -51,7 +51,7 @@
     "@typescript-eslint/parser": "^8.44.1",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
+    "jsdom": "^27.0.0",
     "lefthook": "^1.13.4",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",

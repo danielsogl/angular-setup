@@ -7,6 +7,7 @@ import {
   removeKarmaDependencies,
 } from './vitest';
 import { Schema } from '../schema';
+import { DEPENDENCY_VERSIONS } from '../utils/versions';
 
 describe('Vitest Tool', () => {
   let tree: Tree;
@@ -16,6 +17,7 @@ describe('Vitest Tool', () => {
       info: () => {},
       warn: () => {},
       error: () => {},
+      debug: () => {},
     },
   };
 
@@ -102,7 +104,7 @@ describe('Vitest Tool', () => {
       const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
-      expect(packageJson.devDependencies['vitest']).toBe('latest');
+      expect(packageJson.devDependencies['vitest']).toBe(DEPENDENCY_VERSIONS.vitest);
     });
 
     it('should add jsdom to devDependencies', async () => {
@@ -110,7 +112,7 @@ describe('Vitest Tool', () => {
       const resultTree = (await rule(tree, mockContext as any)) as Tree;
 
       const packageJson = JSON.parse(resultTree.readText('package.json'));
-      expect(packageJson.devDependencies['jsdom']).toBe('latest');
+      expect(packageJson.devDependencies['jsdom']).toBe(DEPENDENCY_VERSIONS.jsdom);
     });
   });
 

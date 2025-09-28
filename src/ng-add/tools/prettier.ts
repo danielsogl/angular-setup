@@ -1,38 +1,14 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree, url, apply, mergeWith } from '@angular-devkit/schematics';
+import { addDevDependencies, addScripts } from '../utils/package-json';
+import { DEPENDENCY_VERSIONS } from '../utils/versions';
 
 export function addPrettierConfiguration(): Rule {
   return (tree: Tree, context: SchematicContext) => {
     context.logger.info('Adding Prettier configuration...');
 
-    const prettierConfig = {
-      semi: true,
-      trailingComma: 'es5',
-      singleQuote: true,
-      printWidth: 100,
-      tabWidth: 2,
-      useTabs: false,
-      arrowParens: 'always',
-      endOfLine: 'lf',
-    };
+    const templateSource = apply(url('./templates/prettier'), []);
 
-    tree.create('.prettierrc.json', JSON.stringify(prettierConfig, null, 2));
-
-    const prettierIgnore = [
-      'node_modules',
-      'dist',
-      'coverage',
-      '.angular',
-      'build',
-      '*.min.js',
-      '*.min.css',
-      'package-lock.json',
-      'yarn.lock',
-      'pnpm-lock.yaml',
-    ].join('\n');
-
-    tree.create('.prettierignore', prettierIgnore);
-
-    return tree;
+    return mergeWith(templateSource)(tree, context);
   };
 }
 
@@ -40,24 +16,14 @@ export function addPrettierDependencies(): Rule {
   return (tree: Tree, context: SchematicContext) => {
     context.logger.info('Adding Prettier dependencies...');
 
-    const packageJson = tree.read('package.json');
-    if (packageJson) {
-      const json = JSON.parse(packageJson.toString());
-      if (!json.devDependencies) {
-        json.devDependencies = {};
-      }
+    addDevDependencies(tree, context, {
+      prettier: DEPENDENCY_VERSIONS.prettier,
+    });
 
-      json.devDependencies['prettier'] = 'latest';
-      json.devDependencies['prettier-eslint'] = 'latest';
-
-      if (!json.scripts) {
-        json.scripts = {};
-      }
-      json.scripts['format'] = 'prettier --write .';
-      json.scripts['format:check'] = 'prettier --check .';
-
-      tree.overwrite('package.json', JSON.stringify(json, null, 2));
-    }
+    addScripts(tree, context, {
+      format: 'prettier --write .',
+      'format:check': 'prettier --check .',
+    });
 
     return tree;
   };

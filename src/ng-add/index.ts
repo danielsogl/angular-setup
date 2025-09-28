@@ -11,25 +11,12 @@ import {
   addVitestDependencies,
   removeKarmaDependencies,
 } from './tools/vitest';
+import { validateWorkspace, validateProject } from './utils/validation';
+import { moveDependencyToDevDependencies } from './utils/package-json';
 
 function moveSelfToDevDependencies(): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    const packageJson = tree.read('package.json');
-    if (packageJson) {
-      const json = JSON.parse(packageJson.toString());
-
-      if (json.dependencies && json.dependencies['@danielsogl/angular-setup']) {
-        if (!json.devDependencies) {
-          json.devDependencies = {};
-        }
-        json.devDependencies['@danielsogl/angular-setup'] =
-          json.dependencies['@danielsogl/angular-setup'];
-        delete json.dependencies['@danielsogl/angular-setup'];
-
-        tree.overwrite('package.json', JSON.stringify(json, null, 2));
-        context.logger.info('Moved @danielsogl/angular-setup to devDependencies');
-      }
-    }
+    moveDependencyToDevDependencies(tree, context, '@danielsogl/angular-setup');
     return tree;
   };
 }
@@ -46,8 +33,19 @@ function installDependencies(): Rule {
 }
 
 export function ngAdd(options: Schema): Rule {
-  return (_tree: Tree, context: SchematicContext) => {
+  return (tree: Tree, context: SchematicContext) => {
     context.logger.info('Running ng-add schematic...');
+
+    const workspaceValidation = validateWorkspace(tree, context);
+    if (!workspaceValidation.valid) {
+      throw new Error(`Workspace validation failed:\n${workspaceValidation.errors.join('\n')}`);
+    }
+
+    const projectValidation = validateProject(tree, context, options.project);
+    if (!projectValidation.valid) {
+      throw new Error(`Project validation failed:\n${projectValidation.errors.join('\n')}`);
+    }
+
     context.logger.info(`Project: ${options.project}`);
 
     const rules: Rule[] = [];
