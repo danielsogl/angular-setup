@@ -11,6 +11,28 @@ import {
   removeKarmaDependencies,
 } from './tools/vitest';
 
+function moveSelfToDevDependencies(): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    const packageJson = tree.read('package.json');
+    if (packageJson) {
+      const json = JSON.parse(packageJson.toString());
+
+      if (json.dependencies && json.dependencies['@danielsogl/angular-setup']) {
+        if (!json.devDependencies) {
+          json.devDependencies = {};
+        }
+        json.devDependencies['@danielsogl/angular-setup'] =
+          json.dependencies['@danielsogl/angular-setup'];
+        delete json.dependencies['@danielsogl/angular-setup'];
+
+        tree.overwrite('package.json', JSON.stringify(json, null, 2));
+        context.logger.info('Moved @danielsogl/angular-setup to devDependencies');
+      }
+    }
+    return tree;
+  };
+}
+
 function installDependencies(): Rule {
   return (tree: Tree, context: SchematicContext) => {
     context.addTask(new NodePackageInstallTask());
@@ -50,6 +72,7 @@ export function ngAdd(options: Schema): Rule {
       rules.push(removeKarmaDependencies());
     }
 
+    rules.push(moveSelfToDevDependencies());
     rules.push(installDependencies());
 
     return chain(rules);
