@@ -50,6 +50,12 @@ export function addPrettierDependencies(): Rule {
       json.devDependencies['prettier'] = 'latest';
       json.devDependencies['prettier-eslint'] = 'latest';
 
+      if (!json.scripts) {
+        json.scripts = {};
+      }
+      json.scripts['format'] = 'prettier --write .';
+      json.scripts['format:check'] = 'prettier --check .';
+
       tree.overwrite('package.json', JSON.stringify(json, null, 2));
     }
 
