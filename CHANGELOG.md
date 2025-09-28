@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/danielsogl/angular-setup/compare/v1.1.0...v1.1.1) (2025-09-28)
+
+
+### Bug Fixes
+
+* update package.json to move @angular-eslint/schematics to dependencies ([9c34d64](https://github.com/danielsogl/angular-setup/commit/9c34d64a2e46a2439e8106f041464dd6a4ff9cbc))
+
 ## [1.1.0](https://github.com/danielsogl/angular-setup/compare/v1.0.0...v1.1.0) (2025-09-27)
 
 
