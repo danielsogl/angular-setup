@@ -19,7 +19,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "prepare": "lefthook install"
+    "prepare": "is-ci ||lefthook install"
   },
   "keywords": [
     "angular",
@@ -51,6 +51,7 @@
     "@typescript-eslint/parser": "^8.44.1",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
+    "is-ci": "^4.1.0",
     "jsdom": "^27.0.0",
     "lefthook": "^1.13.4",
     "prettier": "^3.6.2",
