@@ -2,25 +2,33 @@
 
 [![CI](https://github.com/danielsogl/angular-setup/actions/workflows/ci.yml/badge.svg)](https://github.com/danielsogl/angular-setup/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/@danielsogl%2Fangular-setup.svg)](https://www.npmjs.com/package/@danielsogl/angular-setup)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An Angular schematic that sets up your project with essential development tools and configurations.
+> An Angular schematic that automates the setup of essential development tools and configurations for your Angular projects.
 
-## Features
+## ✨ Features
 
-This schematic provides interactive prompts to selectively install and configure:
+Interactively configure your Angular project with modern development tools:
 
-- **ESLint** - Code linting with Angular-specific rules
-- **Prettier** - Code formatting with custom configuration
-- **Lefthook** - Fast Git hooks manager for running checks on commit
-- **Vitest** - Modern test runner replacing Karma
+- **ESLint** - Static code analysis with Angular-specific rules
+- **Prettier** - Opinionated code formatting
+- **Lefthook** - Lightning-fast Git hooks for pre-commit quality checks
+- **Vitest** - Next-generation testing framework (replaces Karma)
 
-## Installation
+## 📦 Installation
 
 ```bash
 npm install -D @danielsogl/angular-setup
 ```
 
-## Usage
+Or use your preferred package manager:
+
+```bash
+yarn add -D @danielsogl/angular-setup
+pnpm add -D @danielsogl/angular-setup
+```
+
+## 🚀 Usage
 
 Run the schematic in your Angular project:
 
@@ -30,7 +38,7 @@ ng generate @danielsogl/angular-setup:ng-setup
 
 ### Interactive Mode
 
-The schematic will prompt you for each tool:
+You'll be prompted to choose which tools to install:
 
 ```
 ? Would you like to add ESLint configuration? (Y/n)
@@ -41,51 +49,61 @@ The schematic will prompt you for each tool:
 
 ### Non-Interactive Mode
 
-You can skip prompts by providing options directly:
+Skip prompts by providing options:
 
 ```bash
-ng generate @danielsogl/angular-setup:ng-setup --eslint=true --prettier=true --lefthook=false --vitest=true
+ng generate @danielsogl/angular-setup:ng-setup --eslint --prettier --lefthook --vitest
 ```
 
-## What Gets Installed
+Or selectively disable features:
+
+```bash
+ng generate @danielsogl/angular-setup:ng-setup --eslint --prettier --no-lefthook --no-vitest
+```
+
+## 🔧 What Gets Configured
 
 ### ESLint
 
-- Installs `@angular-eslint/schematics`
-- Configures ESLint with Angular-specific rules
-- Adds lint scripts to `package.json`
+- Installs and configures `@angular-eslint/schematics`
+- Sets up Angular-specific linting rules
+- Adds `lint` and `lint:fix` scripts to `package.json`
 
 ### Prettier
 
-- Installs Prettier
-- Adds `.prettierrc.json` with configuration
-- Adds `.prettierignore`
-- Adds format scripts to `package.json`
+- Installs Prettier with sensible defaults
+- Creates `.prettierrc.json` configuration
+- Adds `.prettierignore` file
+- Includes `format` and `format:check` scripts in `package.json`
 
 ### Lefthook
 
-- Installs Lefthook
-- Creates `lefthook.yml` configuration
-- Sets up pre-commit hooks for:
-  - Prettier formatting
-  - ESLint checks
-  - Type checking
+- Installs Lefthook for fast Git hooks
+- Creates `lefthook.yml` with pre-commit hooks:
+  - Code formatting (Prettier)
+  - Linting (ESLint)
+  - Type checking (TypeScript)
 
 ### Vitest
 
-- Installs Vitest and related dependencies
-- Configures Vitest in `angular.json`
-- Removes Karma configuration
+- Installs Vitest and required dependencies
+- Updates `angular.json` with Vitest builder configuration
+- Removes Karma and Jasmine dependencies
 - Updates test scripts in `package.json`
 
-## Requirements
+## 📋 Requirements
 
 - Angular CLI 20.x or higher
 - Node.js 18.x or higher
 
-## Development
+## 🤝 Contributing
 
-### Setup
+Contributions are welcome! This project uses:
+
+- **Conventional Commits** for commit messages
+- **Automated releases** via [release-please](https://github.com/googleapis/release-please)
+
+### Development Setup
 
 ```bash
 npm install
@@ -93,27 +111,17 @@ npm run build
 npm test
 ```
 
-### Publishing
+### Commit Message Format
 
-This project uses [release-please](https://github.com/googleapis/release-please) for automated releases. When changes are merged to `main`:
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `docs:` - Documentation changes
+- `chore:` - Maintenance tasks
 
-1. Release Please creates/updates a release PR
-2. When the release PR is merged, it automatically:
-   - Creates a GitHub release
-   - Publishes to npm
-   - Updates the changelog
+## 📄 License
 
-Use [Conventional Commits](https://www.conventionalcommits.org/) for your commit messages:
+[MIT](LICENSE) © [Daniel Sogl](https://github.com/danielsogl)
 
-- `feat:` for new features
-- `fix:` for bug fixes
-- `docs:` for documentation changes
-- `chore:` for maintenance tasks
+## 🐛 Issues & Support
 
-## License
-
-MIT
-
-## Author
-
-Daniel Sogl
+Found a bug or have a feature request? [Open an issue](https://github.com/danielsogl/angular-setup/issues) on GitHub.
