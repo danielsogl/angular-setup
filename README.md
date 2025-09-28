@@ -30,11 +30,13 @@ pnpm add -D @danielsogl/angular-setup
 
 ## 🚀 Usage
 
-Run the schematic in your Angular project:
+Add the schematic to your Angular project:
 
 ```bash
-ng generate @danielsogl/angular-setup:ng-setup
+ng add @danielsogl/angular-setup
 ```
+
+This command will install the package and automatically run the setup.
 
 ### Interactive Mode
 
@@ -52,13 +54,13 @@ You'll be prompted to choose which tools to install:
 Skip prompts by providing options:
 
 ```bash
-ng generate @danielsogl/angular-setup:ng-setup --eslint --prettier --lefthook --vitest
+ng add @danielsogl/angular-setup --eslint --prettier --lefthook --vitest
 ```
 
 Or selectively disable features:
 
 ```bash
-ng generate @danielsogl/angular-setup:ng-setup --eslint --prettier --no-lefthook --no-vitest
+ng add @danielsogl/angular-setup --eslint --prettier --no-lefthook --no-vitest
 ```
 
 ## 🔧 What Gets Configured
