@@ -1,5 +1,6 @@
 import { Rule, SchematicContext, Tree, chain } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { detect } from 'package-manager-detector/detect';
 import { Schema } from './schema';
 import { addESLint } from './tools/eslint';
 import { addPrettierConfiguration, addPrettierDependencies } from './tools/prettier';
@@ -34,8 +35,12 @@ function moveSelfToDevDependencies(): Rule {
 }
 
 function installDependencies(): Rule {
-  return (tree: Tree, context: SchematicContext) => {
-    context.addTask(new NodePackageInstallTask());
+  return async (tree: Tree, context: SchematicContext) => {
+    const pm = await detect({ cwd: tree.root.path });
+    const packageManager = pm?.agent || 'npm';
+
+    context.logger.info(`Detected package manager: ${packageManager}`);
+    context.addTask(new NodePackageInstallTask({ packageManager }));
     return tree;
   };
 }

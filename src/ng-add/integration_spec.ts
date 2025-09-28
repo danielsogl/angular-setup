@@ -324,12 +324,12 @@ describe('ng-add real project validation', () => {
       );
 
       const schematicPath = path.resolve(__dirname, '../../');
-      console.log(`Linking schematic from ${schematicPath}...`);
+      console.log(`Installing schematic from ${schematicPath}...`);
 
-      execSync(`npm link "${schematicPath}"`, {
+      execSync(`npm install "file:${schematicPath}"`, {
         cwd: projectPath,
         stdio: 'pipe',
-        timeout: 60000,
+        timeout: 120000,
       });
 
       console.log('Running ng-add schematic...');
@@ -494,10 +494,12 @@ describe('ng-add real project validation', () => {
       );
 
       const schematicPath = path.resolve(__dirname, '../../');
-      execSync(`npm link "${schematicPath}"`, {
+      console.log(`Installing schematic from ${schematicPath}...`);
+
+      execSync(`npm install "file:${schematicPath}"`, {
         cwd: projectPath,
         stdio: 'pipe',
-        timeout: 60000,
+        timeout: 120000,
       });
 
       console.log('Running ng-add schematic with vitest=false...');
